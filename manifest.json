@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Wiki Wanderer",
+  "version": "1.0.0",
+  "description": "Wikipediaの閲覧経路を記録し、歩みを可視化して閉路を追跡する拡張機能です。",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.wikipedia.org/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.wikipedia.org/wiki/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Wiki Wanderer"
+  }
+}

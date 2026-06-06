@@ -1,0 +1,545 @@
+/* content.css - Wikipedia Loop Tracker styles (Docked Bottom Footer Light Theme) */
+
+/* -------------------------------------------------------------
+   Docked bottom bar container
+------------------------------------------------------------- */
+#wiki-loop-tracker-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 64px;
+  max-height: 64px;
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #202122; /* MediaWiki text color */
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.2s ease, height 0.3s cubic-bezier(0.1, 0.9, 0.2, 1), max-height 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+  pointer-events: none; /* マウスイベントを透過 */
+}
+
+#wiki-loop-tracker-container * {
+  box-sizing: border-box;
+}
+
+/* 背景ガラスレイヤー */
+.wiki-tracker-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid #a2a9b1; /* MediaWiki border color */
+  border-radius: 12px 12px 0 0; /* Sleek rounded top borders */
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  pointer-events: none;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+/* Glassmorphism panel styling (Docked Bottom Footer) */
+.wiki-tracker-glass-panel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow: visible;
+  z-index: 2;
+  position: relative;
+}
+
+/* -------------------------------------------------------------
+   Left Panel: Title & Basic Stats
+------------------------------------------------------------- */
+/* 左パネルは廃止され右パネルに統合されました */
+
+.wiki-tracker-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #3366cc; /* Wikipedia link blue */
+  user-select: none;
+}
+
+.wiki-tracker-title svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.wiki-tracker-stats {
+  display: flex;
+  gap: 8px;
+  margin-top: 0;
+  font-size: 10.5px;
+  color: #54595d; /* MediaWiki secondary text */
+}
+
+.wiki-tracker-stats strong {
+  color: #202122;
+}
+
+/* -------------------------------------------------------------
+   Center Panel: Horizontal Scrollable Breadcrumbs
+------------------------------------------------------------- */
+.wiki-tracker-canvas-container {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: transparent;
+  white-space: nowrap;
+  height: 64px;
+  align-self: flex-end;
+  pointer-events: auto; /* スクロール操作を可能にする */
+}
+
+.wiki-tracker-breadcrumbs-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  width: max-content; /* Grow infinitely horizontally */
+  position: relative;
+  height: 64px;
+  align-self: flex-end;
+  padding-top: 0;
+  pointer-events: auto; /* パンくずリスト内はマウスイベントを受け取る */
+}
+
+/* Horizontal Scrollbar styling */
+.wiki-tracker-canvas-container::-webkit-scrollbar {
+  height: 4px;
+}
+.wiki-tracker-canvas-container::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+.wiki-tracker-canvas-container::-webkit-scrollbar-thumb {
+  background: #c8ccd1;
+  border-radius: 2px;
+}
+.wiki-tracker-canvas-container::-webkit-scrollbar-thumb:hover {
+  background: #72777d;
+}
+
+/* Breadcrumb tag item */
+.wiki-breadcrumb-item {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  padding: 3px 8px;
+  background: #f8f9fa;
+  border: 1px solid #c8ccd1;
+  border-radius: 4px;
+  color: #3366cc; /* Wikipedia blue */
+  cursor: pointer;
+  transition: all 0.1s ease;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.wiki-breadcrumb-item:hover {
+  background: #f1f2f3;
+  border-color: #72777d;
+  text-decoration: underline;
+}
+
+/* Current Active Breadcrumb */
+.wiki-breadcrumb-item.current {
+  font-weight: bold;
+  color: #202122;
+  border-color: #a2a9b1;
+  background: #eaecf0; /* Darker grey background */
+  cursor: default;
+  text-decoration: none;
+}
+
+.wiki-breadcrumb-item.current:hover {
+  background: #eaecf0;
+  border-color: #a2a9b1;
+  text-decoration: none;
+}
+
+/* Future path during detour (dimmed) */
+.wiki-breadcrumb-item.future {
+  opacity: 0.45;
+  color: #72777d;
+  border-style: dotted;
+}
+
+/* Loop highlights (warning amber style) */
+.wiki-breadcrumb-item.in-loop {
+  background: #fdf6ec;
+  border-color: #fcd289;
+  color: #e67e22;
+}
+
+.wiki-breadcrumb-item.in-loop:hover {
+  background: #fdf6ec;
+  border-color: #e67e22;
+}
+
+.wiki-breadcrumb-item.in-loop.current {
+  background: #fdf6ec;
+  border-color: #e67e22;
+  color: #e67e22;
+  box-shadow: 0 0 0 1px #e67e22;
+}
+
+/* Highlight matching links */
+.wiki-breadcrumb-item.highlighted {
+  border-color: #3366cc;
+  background: #e8f0fe;
+  color: #3366cc;
+  box-shadow: 0 0 0 1px #3366cc;
+}
+
+/* Separator arrow */
+.wiki-breadcrumb-separator {
+  color: #a2a9b1;
+  font-size: 10px;
+  font-weight: 500;
+  user-select: none;
+  display: inline-block;
+  margin: 0 1px;
+}
+
+/* -------------------------------------------------------------
+   Right Panel: Undo detour & Controls
+------------------------------------------------------------- */
+.wiki-tracker-right-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: 4px;
+  padding: 6px 16px;
+  border-left: 1px solid #eaecf0;
+  flex-shrink: 0;
+  background: #f8f9fa;
+  height: 64px;
+  align-self: flex-end;
+  border-top: 1px solid #a2a9b1;
+  border-radius: 0 12px 0 0;
+  pointer-events: auto; /* マウスイベントを受け取る */
+  min-width: 250px;
+}
+
+#wiki-loop-tracker-container.has-loop-path .wiki-tracker-right-panel {
+  border-top: 1px solid #eaecf0;
+  border-radius: 0;
+}
+
+.wiki-tracker-right-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+}
+
+.wiki-tracker-right-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.wiki-tracker-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wiki-tracker-btn {
+  background: #ffffff;
+  border: 1px solid #a2a9b1;
+  color: #202122;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wiki-tracker-btn:hover {
+  background: #f8f9fa;
+  border-color: #72777d;
+}
+
+.wiki-tracker-btn:active {
+  background: #f1f2f3;
+}
+
+.wiki-tracker-btn.active {
+  background: #e8f0fe; /* Blue tint */
+  border-color: #3366cc;
+  color: #3366cc;
+}
+
+.wiki-tracker-btn.active:hover {
+  background: #d2e3fc;
+}
+
+.wiki-tracker-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+
+
+/* -------------------------------------------------------------
+   Collapsed Minimized tab (Bottom-right anchored)
+------------------------------------------------------------- */
+#wiki-loop-tracker-container.minimized {
+  width: 180px;
+  height: 36px;
+  max-height: 36px;
+  left: auto;
+  right: 24px;
+  bottom: 0;
+  border: 1px solid #a2a9b1;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
+  pointer-events: auto; /* 最小化時はコンテナ自体がイベントを受け取る */
+}
+
+.wiki-tracker-minimized-tab {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  color: #3366cc;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.wiki-tracker-minimized-tab:hover {
+  background: #f8f9fa;
+  text-decoration: underline;
+}
+
+.wiki-tracker-minimized-tab svg {
+  width: 14px;
+  height: 14px;
+  stroke: #3366cc;
+  stroke-width: 2.5;
+  fill: none;
+}
+
+.wiki-tracker-loop-info {
+  display: none; /* Docked header has no separate loop info bar */
+}
+
+/* -------------------------------------------------------------
+   In-page Article Link Badges
+------------------------------------------------------------- */
+.wiki-loop-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 50%;
+  margin: 0 4px;
+  vertical-align: middle;
+  cursor: help;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  user-select: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.wiki-loop-badge:hover {
+  transform: scale(1.25);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.wiki-loop-badge[data-size="2"] {
+  background: #fee7e6;
+  color: #d33; /* Wikipedia red */
+  border-color: #fda5a3;
+}
+
+.wiki-loop-badge[data-size="3"] {
+  background: #fef1d8;
+  color: #b56000;
+  border-color: #fcd289;
+}
+
+.wiki-loop-badge[data-size="4"] {
+  background: #eafaf1;
+  color: #107c41;
+  border-color: #a3e5c0;
+}
+
+.wiki-loop-badge[data-size="5"] {
+  background: #eaf2ff;
+  color: #2563eb;
+  border-color: #93c5fd;
+}
+
+.wiki-loop-badge[data-size="6"],
+.wiki-loop-badge[data-size="7"],
+.wiki-loop-badge[data-size="8"],
+.wiki-loop-badge[data-size="9"] {
+  background: #f3e8ff;
+  color: #7c3aed;
+  border-color: #d8b4fe;
+}
+
+.wiki-loop-badge[data-size-group="large"] {
+  background: #e0e7ff;
+  color: #4f46e5;
+  border-color: #c7d2fe;
+  border-radius: 6px;
+  width: auto;
+  min-width: 18px;
+  padding: 0 3px;
+}
+
+/* -------------------------------------------------------------
+   Page Highlight Overlay (for previewing loops on link hover)
+------------------------------------------------------------- */
+.wiki-loop-link-highlight {
+  outline: 2px solid #3366cc !important; /* Wikipedia Blue */
+  background-color: rgba(51, 102, 204, 0.08) !important;
+  transition: all 0.15s ease;
+  border-radius: 2px;
+}
+
+/* -------------------------------------------------------------
+   Loop Shortcut Arch Lines
+------------------------------------------------------------- */
+.wiki-loop-shortcut-line {
+  stroke: #c8ccd1; /* Light grey */
+  color: #a2a9b1;  /* Default arrow color */
+  stroke-width: 1.2;
+  fill: none;
+  opacity: 0.8;
+  transition: stroke-width 0.2s ease, stroke 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+}
+
+.wiki-loop-shortcut-line:hover,
+.wiki-loop-shortcut-line.hovered {
+  stroke: #72777d; /* Medium grey on hover */
+  color: #72777d;  /* Darker arrow color on hover */
+  stroke-width: 2.0;
+  opacity: 1;
+}
+
+
+
+#wiki-tracker-svg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 5;
+}
+
+/* -------------------------------------------------------------
+   Mode Toggle Switch
+------------------------------------------------------------- */
+.wiki-tracker-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.wiki-tracker-switch {
+  position: relative;
+  display: inline-block;
+  width: 28px;
+  height: 16px;
+}
+
+.wiki-tracker-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.wiki-tracker-switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #c8ccd1;
+  transition: .2s ease;
+  border-radius: 16px;
+}
+
+.wiki-tracker-switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 10px;
+  width: 10px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .2s ease;
+  border-radius: 50%;
+}
+
+.wiki-tracker-switch input:checked + .wiki-tracker-switch-slider {
+  background-color: #3366cc;
+}
+
+.wiki-tracker-switch input:checked + .wiki-tracker-switch-slider:before {
+  transform: translateX(12px);
+}
+
+.wiki-tracker-switch input:disabled + .wiki-tracker-switch-slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wiki-tracker-switch-label {
+  font-size: 10px;
+  font-weight: bold;
+  color: #54595d;
+  min-width: 42px;
+}
+
+.wiki-tracker-switch input:disabled ~ .wiki-tracker-switch-label {
+  color: #a2a9b1;
+}
+

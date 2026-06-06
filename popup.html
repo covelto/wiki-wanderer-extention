@@ -1,0 +1,201 @@
+<!-- popup.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Wiki Wanderer</title>
+  <style>
+    body {
+      width: 280px;
+      margin: 0;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #ffffff; /* White background */
+      color: #202122; /* Dark text */
+      box-sizing: border-box;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #eaecf0; /* MediaWiki light border */
+      padding-bottom: 12px;
+    }
+    .title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #3366cc; /* Wikipedia Blue */
+      letter-spacing: 0.3px;
+    }
+    .logo-svg {
+      width: 20px;
+      height: 20px;
+      stroke: #3366cc;
+      stroke-width: 2.2;
+      fill: none;
+    }
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      background: #f8f9fa; /* MediaWiki Light Gray */
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #eaecf0;
+    }
+    .label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #202122;
+    }
+    /* Switch styling */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #c8ccd1;
+      transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 22px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #ffffff;
+      transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider {
+      background-color: #3366cc; /* Checked uses Wikipedia Blue */
+    }
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      background-color: #f8f9fa; /* MediaWiki button bg */
+      border: 1px solid #a2a9b1; /* MediaWiki border */
+      color: #202122;
+      padding: 9px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.1s ease;
+      margin-bottom: 8px;
+      text-decoration: none;
+      box-sizing: border-box;
+    }
+    .btn:hover {
+      background-color: #f1f2f3;
+      border-color: #72777d;
+    }
+    .btn:active {
+      background-color: #e4e5e7;
+      transform: scale(0.99);
+    }
+    .btn-danger {
+      background-color: #fee7e6; /* Wikipedia light red */
+      border: 1px solid #fda5a3;
+      color: #d33; /* Wikipedia text red */
+    }
+    .btn-danger:hover {
+      background-color: #fdd8d6;
+      border-color: #fcb0ae;
+    }
+    .btn-danger:active {
+      background-color: #fcc3c1;
+    }
+    .btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+    .info {
+      font-size: 11px;
+      color: #72777d; /* MediaWiki secondary text */
+      line-height: 1.5;
+      margin-top: 14px;
+      text-align: center;
+      padding: 0 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <svg class="logo-svg" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+    <div class="title">Wiki Wanderer</div>
+  </div>
+
+  <div class="setting-row">
+    <span class="label">トラッキングを有効化</span>
+    <label class="switch">
+      <input type="checkbox" id="tracking-toggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="setting-row">
+    <span class="label">随時更新モード</span>
+    <label class="switch">
+      <input type="checkbox" id="mode-toggle">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+
+
+  <button class="btn btn-danger" id="reset-path-btn">
+    <svg viewBox="0 0 24 24">
+      <polyline points="3 6 5 6 21 6"></polyline>
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    </svg>
+    現在のタブの経路をリセット
+  </button>
+  
+  <a class="btn" href="https://ja.wikipedia.org" target="_blank" id="open-wiki-btn">
+    <svg viewBox="0 0 24 24">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+      <polyline points="15 3 21 3 21 9"></polyline>
+      <line x1="10" y1="14" x2="21" y2="3"></line>
+    </svg>
+    Wikipedia を開く
+  </a>
+
+  <div class="info">
+    Wikipedia の記事を読み込み、リンクを辿ることで自動的に経路のグラフと閉路情報が生成されます。
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
